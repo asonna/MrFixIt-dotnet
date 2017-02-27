@@ -2,29 +2,66 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h3>Our Current Jobs</h3>
-    @Html.ActionLink("Add a new job", "Create")
-</div>
-@foreach (var Job in Model)
+@model List<MrFixIt.Models.Job>
+
+<!--Claim Job Script-->
+<script>
+    $(function () {
+        $(".job-claim").submit(function (event) {
+            event.preventDefault();
+            console.log($(this).serialize());
+            $.ajax({
+                url: 'Jobs/Claim/',
+                type: 'POST',
+                data: $(this).serialize(),
+                datatype: 'json',
+                success: function (result) {
+                    var htmlResult =
+                        "This job is claimed by " + result.worker.firstName + " " + result.worker.lastName;
+                    $(".claim#" + result.jobId).html(htmlResult);
+                },
+            }).fail(function(){
+                alert("An active job already exist in your cart!");
+            });
+        });
+    });
+</script>
+
+<!-- Job List-->
+<h2>Jobs</h2>
+<hr />
+<a asp-controller="Jobs" asp-action="Create" class="btn btn-default">Add a new job</a>
+<h3>Available and In Process Jobs</h3>
+@foreach (var job in Model)
 {
-    <ul>
-        <li>@Job.Title</li>
-        <ul>
-            <li>@Job.Description</li>
-        </ul>
-        @if (Job.Worker == null)
-        {
-        <li class="btn">This job is unclaimed. @Html.ActionLink("Claim This Job", "Claim", new { @text = @Job.Title, id = Job.JobId })</li>
-        }
-        else
-        {
-            <li class="btn">This Job is claimed by @Job.Worker.FirstName @Job.Worker.LastName</li>
+    @if (job.Completed == false)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">@job.Title</h3>
+            </div>
+            <div class="panel-body">
+                @job.Description
+                <hr />
+                <div class="claim" id="@job.JobId">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (job.Worker == null)
+                        {
+                            <form class="job-claim">
+                                <input type="hidden" name="jobId" value="@job.JobId" />
+                                <input type="submit" class="submit-as-link" value="Claim Job" />
+                            </form>
 
-        }
-    </ul>
-
-
-    <hr />
+                        }
+                        else
+                        {
+                            <span>This job is claimed by @job.Worker.FirstName @job.Worker.LastName</span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
 }
-
+<br /><br />

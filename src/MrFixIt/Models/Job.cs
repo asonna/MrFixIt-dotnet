@@ -16,10 +16,28 @@ namespace MrFixIt.Models
         public bool Pending { get; set; }
         public virtual Worker Worker { get; set; }
 
-        public Worker FindWorker(string UserName)
+
+        public void MarkCompleted()
         {
-            Worker thisWorker = new MrFixItContext().Workers.FirstOrDefault(i => i.UserName == UserName);
-            return thisWorker;
+            Completed = true;
+            Pending = false;
         }
+
+        public void MarkPending()
+        {
+            Completed = false;
+            Pending = true;
+        }
+        public void MarkInactive()
+        {
+            Completed = false;
+            Pending = false;
+        }
+
+        //public Worker FindWorker(string UserName)
+        //{
+        //    Worker thisWorker = new MrFixItContext().Workers.FirstOrDefault(i => i.UserName == UserName);
+        //    return thisWorker;
+        //}
     }
 }
