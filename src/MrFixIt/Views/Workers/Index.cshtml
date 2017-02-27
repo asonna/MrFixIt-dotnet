@@ -36,11 +36,11 @@
                     </div>
                     <div class="panel-body">
                         @job.Description
-                        <hr />
+                        <br /><br />
                         <div class="completion">
                             @if (@job.Completed)
                             {
-                                <span>Completed</span>
+                                <button class="btn btn-success"><span>Completed</span></button>
                             }
                             else
                             {
@@ -64,9 +64,9 @@
                         </div>
                         <form asp-controller="Jobs" asp-action="Delete" method="post">
                             <input type="hidden" name="id" value="@job.JobId" />
-                            <input type="submit" class="submit-as-link" value="Delete" />
+                            <button class="btn btn-danger" type="submit" value="Delete">Delete</button>
                         </form>
-                    </div>
+                    </div><hr />
                 @*</div>*@
             </div>
         }

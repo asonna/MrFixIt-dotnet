@@ -53,6 +53,7 @@ You will need the following things properly installed on your computer.
 * Open the MrFixIt.sln in Visual Studio.
 * Start the local server by hitting the play button.
 * Build/Run the Program
+* You can use the following info to log in by default using the db data. email: asonna; password: Asonna123!
 * Open the microsoft SQL only if you want to see the tables
 
 ## Support and contact details
