@@ -7,14 +7,11 @@ using MrFixIt.Models;
 using Microsoft.AspNetCore.Identity;
 using MrFixIt.ViewModels;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MrFixIt.Controllers
 {
     public class AccountController : Controller
     {
-        private MrFixItContext db = new MrFixItContext();
-
+        //private MrFixItContext db = new MrFixItContext();
 
         //Basic User Account Info here...
         private readonly MrFixItContext _db;
@@ -37,7 +34,7 @@ namespace MrFixIt.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var thisWorker = db.Workers.FirstOrDefault(item => item.UserName == User.Identity.Name);
+                var thisWorker = _db.Workers.FirstOrDefault(item => item.UserName == User.Identity.Name);
                 return View(thisWorker);
             }
             else
@@ -59,7 +56,7 @@ namespace MrFixIt.Controllers
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
             else
             {
