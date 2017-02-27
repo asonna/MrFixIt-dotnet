@@ -6,8 +6,8 @@
 
 <!--Claim Job Script-->
 <script>
-    $(function () {
-        $(".job-claim").submit(function (event) {
+    $(document).ready(function () {
+        $(".claim-job").submit(function (event) {
             event.preventDefault();
             console.log($(this).serialize());
             $.ajax({
@@ -28,13 +28,13 @@
 </script>
 
 <!-- Job List-->
-<h2>Jobs</h2>
+<h2>Jobs List</h2>
 <hr />
 <a asp-controller="Jobs" asp-action="Create" class="btn btn-default">Add a new job</a>
 <h3>Available and In Process Jobs</h3>
 @foreach (var job in Model)
 {
-    @if (job.Completed == false)
+    @if (@job.Completed == false)
     {
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -48,7 +48,7 @@
                     {
                         @if (job.Worker == null)
                         {
-                            <form class="job-claim">
+                            <form class="claim-job">
                                 <input type="hidden" name="jobId" value="@job.JobId" />
                                 <input type="submit" class="submit-as-link" value="Claim Job" />
                             </form>
@@ -65,3 +65,38 @@
     }
 }
 <br /><br />
+
+<h3>Completed Jobs</h3>
+@foreach (var job in Model)
+{
+    @if (job.Completed == true)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">@job.Title</h3>
+            </div>
+            <div class="panel-body">
+                @job.Description
+                <hr />
+                <div class="claim" id="@job.JobId">
+                    @if (job.Worker == null)
+                    {
+                        <form class="claim-job">
+                            <input type="hidden" name="jobId" value="@job.JobId" />
+                            <input type="submit" class="submit-as-link" value="Claim Job" />
+                        </form>
+
+                    }
+                    else
+                    {
+                        <p>This job is claimed by @job.Worker.FirstName @job.Worker.LastName</p>
+                    }
+                </div>
+                <form asp-controller="Jobs" asp-action="Delete" method="post">
+                    <input type="hidden" name="id" value="@job.JobId" />
+                    <input type="submit" class="submit-as-link" value="Delete" />
+                </form>
+            </div>
+        </div>
+    }
+}

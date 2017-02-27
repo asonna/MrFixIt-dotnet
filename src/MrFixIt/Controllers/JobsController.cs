@@ -41,12 +41,12 @@ namespace MrFixIt.Controllers
         [ActionName("Claim")]
         public IActionResult ClaimJob(int jobId)
         {
-            Job job = db.Jobs.Include(j => j.Worker).FirstOrDefault(items => items.JobId == jobId);
+            Job job = db.Jobs.Include(items => items.Worker).FirstOrDefault(items => items.JobId == jobId);
             Worker claimingWorker = db.Workers.FirstOrDefault(i => i.UserName == User.Identity.Name);
 
-            if (claimingWorker.Avaliable)
+            if (claimingWorker.Available)
             {
-                claimingWorker.Avaliable = false;
+                claimingWorker.Available = false;
                 job.Worker = claimingWorker;
             }
 
@@ -55,6 +55,54 @@ namespace MrFixIt.Controllers
             return Json(job);
         }
 
-        
+        [HttpPost]
+        public IActionResult StatusChange(int jobId, string changeValue)
+        {
+            List<Job> workerJobs = db.Jobs.Include(items => items.Worker).Where(items => items.JobId == jobId).ToList();
+
+            if (changeValue == "pending")
+            {
+                foreach (Job job in workerJobs)
+                {
+                    if (job.JobId == jobId && job.Completed == false)
+                    {
+                        job.MarkPending();
+                        job.Worker.Available = false;
+                        db.Entry(job).State = EntityState.Modified;
+                        db.Entry(job.Worker).State = EntityState.Modified;
+                    }
+                    else if (job.Completed == false)
+                    {
+                        job.MarkInactive();
+                        db.Entry(job).State = EntityState.Modified;
+                    }
+                }
+            }
+            else if (changeValue == "complete")
+            {
+                foreach (Job job in workerJobs)
+                {
+                    if (job.JobId == jobId)
+                    {
+                        job.MarkCompleted();
+                        job.Worker.Available = true;
+                        db.Entry(job).State = EntityState.Modified;
+                        db.Entry(job.Worker).State = EntityState.Modified;
+                    }
+                }
+            }
+            db.SaveChangesAsync();
+
+            return View(workerJobs);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            Job job = db.Jobs.FirstOrDefault(j => j.JobId == id);
+            db.Remove(job);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -214,6 +214,8 @@
 "C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Controllers\WorkersController.cs"
 "C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Migrations\20161206233149_Initial.cs"
 "C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Migrations\20161206233149_Initial.Designer.cs"
+"C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Migrations\20170227070709_ModifyColumnName.cs"
+"C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Migrations\20170227070709_ModifyColumnName.Designer.cs"
 "C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Migrations\MrFixItContextModelSnapshot.cs"
 "C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Models\ApplicationUser.cs"
 "C:\Users\HP\Documents\Visual Studio 2015\Projects\MrFixIt-dotnet\src\MrFixIt\Models\Job.cs"

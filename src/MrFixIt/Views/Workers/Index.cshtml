@@ -2,24 +2,83 @@
     ViewData["Title"] = "Index";
 }
 
+<!--Script-->
+<script>
+    $(document).ready(function () {
+        $(".changeStatus").submit(function (event) {
+            event.preventDefault();
+            var jobId = $("input[name=jobId]", this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/Jobs/StatusChange/',
+                data: $(this).serialize(),
+                datatype: 'html',
+                success: function (result) {
+                    $("#job-panel-" + jobId).html(result);
+                }
+            });
+        });
+    });
+</script>
+
+<!--html-->
 @if (User.Identity.IsAuthenticated)
-{
+{  
+    <h4>Hello @Model.FirstName @Model.LastName. You are Logged In</h4>
+    <h3>Your Current Jobs:</h3>
+    <div id="jobList">
+        @foreach (var job in Model.Jobs)
+        {
+            <div id="job-panel-@job.JobId">
+                @*<div class="panel @job.GetPanelClass()">*@
+                    <div class="panel-heading">
+                        <h3 class="panel-title">@job.Title</h3>
+                    </div>
+                    <div class="panel-body">
+                        @job.Description
+                        <hr />
+                        <div class="completion">
+                            @if (@job.Completed)
+                            {
+                                <span>Completed</span>
+                            }
+                            else
+                            {
+                                <form class="changeStatus">
+                                    <input type="hidden" name="jobId" value="@job.JobId" />
+                                    @if (@job.Pending)
+                                    {
+                                        <span>Pending</span>
+                                        <input type="hidden" name="changeValue" value="complete" />
+                                        <input type="submit" class="submit-as-link" value="Mark as complete" />
+                                    }
+                                    else
+                                    {
+                                        <span>Inactive</span>
+                                        <input type="hidden" name="changeValue" value="pending" />
+                                        <input type="submit" class="submit-as-link" value="Mark as pending" />
 
-    <div class="text-center">
-        <h4>Hello Worker @Model.FirstName @Model.LastName. You are Logged In</h4>
-        <h3>Your Current Jobs:</h3>
-        @foreach (var Job in Model.Jobs)
-        {
-            <h5>@Job.Title</h5>
-
-        }
-        @if (Model.Avaliable)
-        {
-            <h2>Please @Html.ActionLink("select a job", "Index", "Jobs").</h2>
-        }
-        else
-        {
-            <p>You are already assigned to a job.</p>
+                                    }
+                                </form>
+                            }
+                        </div>
+                        <form asp-controller="Jobs" asp-action="Delete" method="post">
+                            <input type="hidden" name="id" value="@job.JobId" />
+                            <input type="submit" class="submit-as-link" value="Delete" />
+                        </form>
+                    </div>
+                @*</div>*@
+            </div>
         }
     </div>
+
+    @if (Model.Available)
+    {
+        <h2>Please <a asp-controller="Jobs" asp-action="Index">select a job</a></h2>
+    }
+    else
+    {
+        <p>You are already assigned to a job.</p>
+    }
+ 
 }
