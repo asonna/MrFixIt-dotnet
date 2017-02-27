@@ -9,7 +9,6 @@
     $(document).ready(function () {
         $(".claim-job").submit(function (event) {
             event.preventDefault();
-            console.log($(this).serialize());
             $.ajax({
                 url: 'Jobs/Claim/',
                 type: 'POST',

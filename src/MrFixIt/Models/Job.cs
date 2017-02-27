@@ -34,10 +34,10 @@ namespace MrFixIt.Models
             Pending = false;
         }
 
-        //public Worker FindWorker(string UserName)
-        //{
-        //    Worker thisWorker = new MrFixItContext().Workers.FirstOrDefault(i => i.UserName == UserName);
-        //    return thisWorker;
-        //}
+        public Worker FindWorker(string UserName)
+        {
+            Worker thisWorker = new MrFixItContext().Workers.FirstOrDefault(i => i.UserName == UserName);
+            return thisWorker;
+        }
     }
 }
